@@ -1,12 +1,14 @@
 
+
 fileName = "household_power_consumption.txt"
+plotFileName = "plot1.png"
 
 # Download and unzip the data file into the current working directory
 downloadData <- function() {
     zipFileName = "pc.zip"
     fileURL = "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
-
-    download.file(fileURL, zipFileName, method="curl")
+    
+    download.file(fileURL, zipFileName)
     unzip(zipFileName)
 }
 
@@ -22,7 +24,10 @@ loadData <- function(name = "household_power_consumption.txt") {
 }
 
 plot1 <- function(frame) {
-    png("plot1.png")
+    if(file.exists(plotFileName)) {
+        file.remove(plotFileName)
+    }
+    png(plotFileName)
     par(bg = "white")
     par(fg = "black")
     par(cex = 0.75)
@@ -30,21 +35,8 @@ plot1 <- function(frame) {
     dev.off()
 }
 
-plot2 <- function(frame) {
-    png("plot2.png")
-    par(bg = "white")
-    par(fg = "black")
-    #par(cex = 0.75)
-    plot(frame, type="l", xlab="", ylab="Global Active Power (killowatts)", xaxt="n")
-    axis(1, at=c(0, 1440, 2880), labels=c("Thu", "Fri", "Sat"))
-    dev.off()
+if(file.exists(fileName) == FALSE) {
+    downloadData()
 }
-
-plot3 <- function(frame) {
-    
-}
-
-#downloadData()
-#frame <- loadData()
-#plot1(frame$Global_active_power)
-#plot2(frame$Global_active_power)
+frame <- loadData()
+plot1(frame$Global_active_power)
